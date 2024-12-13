@@ -46,16 +46,33 @@ app.MapGet("/tasks", () =>
 
 app.MapPost("/tasks", (string title, string? newTitle, string? description, bool? isUrgent, bool? isImportant) =>
 {
-    // Log all incoming values
-    Console.WriteLine($"Title: {title}");
-    Console.WriteLine($"NewTitle: {newTitle}");
-    Console.WriteLine($"Description: {description}");
-    Console.WriteLine($"IsUrgent: {isUrgent}");
-    Console.WriteLine($"IsImportant: {isImportant}");
+    try
+    {
+        // Log all incoming values
+        Console.WriteLine($"Title: {title}");
+        Console.WriteLine($"NewTitle: {newTitle}");
+        Console.WriteLine($"Description: {description}");
+        Console.WriteLine($"IsUrgent: {isUrgent}");
+        Console.WriteLine($"IsImportant: {isImportant}");
 
-    var task = library.GetOrCreate(title, newTitle: newTitle, newDescription: description, isUrgent: isUrgent, isImportant: isImportant);
-    return Results.Created($"/tasks/{task.Title}", task.Serialize());
+        // Attempt to process the task
+        library.GetOrCreate(title, newTitle: newTitle, newDescription: description, isUrgent: isUrgent, isImportant: isImportant);
+
+        // Return OK on success
+        return Results.Ok("OK");
+    }
+    catch (Exception ex)
+    {
+        // Log the error for debugging
+        Console.WriteLine($"Error: {ex.Message}");
+        Console.WriteLine($"StackTrace: {ex.StackTrace}");
+
+        // Return a generic error message
+        return Results.Problem("An error occurred while processing the request.");
+    }
 }).WithName("CreateTask");
+
+
 
 app.MapDelete("/tasks/{taskName}", (string taskName) =>
 {
