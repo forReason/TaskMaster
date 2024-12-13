@@ -1,14 +1,25 @@
 using TaskMaster.Objects;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Configure CORS
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(policy =>
+    {
+        policy.AllowAnyOrigin()
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+});
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-//--------------------------------------------------------
-// Setup Swagger in development
-//--------------------------------------------------------
+app.UseCors(); // Enable CORS middleware
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -17,50 +28,41 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-//--------------------------------------------------------
-// Initialize the TaskItemLibrary
-//--------------------------------------------------------
 var library = new TaskItemLibrary("DefaultLibrary");
 
-//--------------------------------------------------------
-// Endpoints
-//--------------------------------------------------------
-
-/// <summary>
-/// Returns all tasks.
-/// </summary>
 app.MapGet("/tasks", () =>
     {
-        List<string> results = new();
-        foreach (TaskItem item in library.tasks) results.Add(item.Serialize());
-        return results;
+        var result = library.tasks.Select(task => new
+        {
+            task.Title,
+            task.Description,
+            task.IsUrgent,
+            task.IsImportant,
+            Tags = task.Tags.ToArray()
+        }).ToList();
+        return result;
     })
     .WithName("GetAllTasks");
 
+app.MapPost("/tasks", (string title, string? newTitle, string? description, bool? isUrgent, bool? isImportant) =>
+{
+    // Log all incoming values
+    Console.WriteLine($"Title: {title}");
+    Console.WriteLine($"NewTitle: {newTitle}");
+    Console.WriteLine($"Description: {description}");
+    Console.WriteLine($"IsUrgent: {isUrgent}");
+    Console.WriteLine($"IsImportant: {isImportant}");
 
-/// <summary>
-/// Creates a new task or updates an existing one.
-/// </summary>
-app.MapPost("/tasks", (string title, string? newTitle ,string? description, bool? isUrgent, bool? isImportant, string[]? tags) =>
-    {
-        var task = library.GetOrCreate(title, newTitle: newTitle, newDescription: description, isUrgent: isUrgent, isImportant: isImportant, newTags: tags);
-        return Results.Created($"/tasks/{task.Title}", task.Serialize());
-    })
-    .WithName("CreateTask");
+    var task = library.GetOrCreate(title, newTitle: newTitle, newDescription: description, isUrgent: isUrgent, isImportant: isImportant);
+    return Results.Created($"/tasks/{task.Title}", task.Serialize());
+}).WithName("CreateTask");
 
-/// <summary>
-/// Deletes a task by name.
-/// </summary>
 app.MapDelete("/tasks/{taskName}", (string taskName) =>
-    {
-        var task = library.GetOrCreate(taskName);
-        if (task is null)
-        {
-            return Results.NotFound();
-        }
-        library.DeleteTask(task);
-        return Results.Ok();
-    })
-    .WithName("DeleteTask");
+{
+    var task = library.GetOrCreate(taskName);
+    if (task is null) return Results.NotFound();
+    library.DeleteTask(task);
+    return Results.Ok();
+}).WithName("DeleteTask");
 
 app.Run();
