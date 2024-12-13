@@ -1,9 +1,12 @@
+/* General Styles */
 body {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
     font-family: sans-serif;
 }
+
+/* Grid Layout */
 .grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -13,11 +16,27 @@ body {
     margin: 0;
     padding: 1rem;
 }
+
+/* Container Styling */
 .container {
     border: 1px solid #ccc;
-    padding: 1rem;
+    padding: 0; /* Remove padding to avoid issues with positioning */
     overflow-y: auto;
+    position: relative; /* Establish a containing block for child elements */
 }
+
+.container h2 {
+    font-size: 1.2rem;
+    margin: 0;
+    padding: 1rem; /* Add padding to maintain spacing */
+    position: sticky; /* Keep it visible while scrolling */
+    top: 0; /* Stick to the top of the container */
+    background-color: white; /* Optional: Ensure a solid background */
+    z-index: 1; /* Ensure it stays above scrolling content */
+}
+
+
+/* Card Styling */
 .card {
     border: 1px solid #ddd;
     padding: 1rem;
@@ -26,18 +45,24 @@ body {
     background: #f9f9f9;
     cursor: grab;
 }
+
 .card-title {
     font-size: 1.1rem;
     font-weight: bold;
     margin-bottom: 0.5rem;
 }
+
 .card-description {
     font-size: 0.9rem;
     color: #555;
 }
+
+/* Container Drag-Over State */
 .container.drag-over {
     border-color: #007bff;
 }
+
+/* Plus Button Styling */
 .plus-button {
     position: fixed;
     top: 50%;
