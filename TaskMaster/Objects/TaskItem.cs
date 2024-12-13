@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using System.Text.Json;
@@ -257,7 +258,9 @@ namespace TaskMaster.Objects
         {
             if (obj is TaskItem other)
             {
-                return string.Equals(this.Title, other.Title, StringComparison.OrdinalIgnoreCase);
+                // Ensure that all relevant properties for uniqueness are compared
+                bool equal = string.Equals(this._title, other._title, StringComparison.OrdinalIgnoreCase);
+                return equal;
             }
             return false;
         }

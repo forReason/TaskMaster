@@ -70,7 +70,10 @@ public class TaskItemLibrary
         // Change 'tasks' to a ConcurrentDictionary<string, TaskItem> instead of a ConcurrentHashSet<TaskItem>.
         // This allows atomic GetOrAdd operations by task name.
         TaskItem query = new TaskItem(taskName, this);
-        if (tasks.TryGet(query, out TaskItem taskItem)) return taskItem;
+        if (tasks.TryGet(query, out TaskItem taskItem))
+        {
+            return taskItem;
+        }
         if (query.FilePath.Exists) query = TaskItem.Load(query.FilePath.FullName, this);
         bool success = tasks.Add(query);
         ChangeTaskUrgency(query);
@@ -80,34 +83,77 @@ public class TaskItemLibrary
     }
 
     public TaskItem GetOrCreate(string originalTitle, 
-        string? newTitle = null, string? newDescription = null, bool? isUrgent = null, bool? isImportant = null, string[]? newTags = null)
-    {
-        TaskItem original = GetOrCreate(originalTitle);
-        if (!string.IsNullOrEmpty(newTitle)) original.Title = newTitle;
-        if (!string.IsNullOrEmpty(newDescription)) original.Description = newDescription;
-        if (isUrgent is not null) original.IsUrgent = isUrgent.Value;
-        if (isImportant is not null) original.IsImportant = isImportant.Value;
-        if (newTags is not null)
-        {
-            HashSet<string> newTagsSet = new HashSet<string>();
-            foreach (string tag in newTags)
-            {
-                newTagsSet.Add(TaskItem.BuildTagName(tag));
-            }
+    string? newTitle = null, string? newDescription = null, bool? isUrgent = null, bool? isImportant = null, string[]? newTags = null)
+{
+    TaskItem original = GetOrCreate(originalTitle);
 
-            foreach (string tag in original.Tags)
-            {
-                if (!newTagsSet.Contains(tag)) original.RemoveTag(tag);
-            }
-            foreach (string tag in newTagsSet)                      
-            {                                                          
-                if (!original.Tags.Contains(tag)) original.AddTag(tag);
-            }                                                          
-        }
-        original.Save();
-        requiringSave.TryRemove(original, out _);
-        return original;
+    // Remove the task from old collections
+    if (!string.IsNullOrEmpty(newTitle) && newTitle != originalTitle)
+    {
+        TaskItem itemToDelete = new TaskItem(originalTitle, this);
+        tasks.TryRemove(itemToDelete, out _);
+        if (itemToDelete.FilePath.Exists) itemToDelete.FilePath.Delete();
     }
+
+    if (isUrgent is not null && original.IsUrgent != isUrgent.Value)
+    {
+        if (tasksByIsUrgent.TryGetValue(original.IsUrgent, out var oldUrgencySet))
+            oldUrgencySet.TryRemove(original, out _);
+
+        original.IsUrgent = isUrgent.Value;
+
+        tasksByIsUrgent.AddOrUpdate(original.IsUrgent,
+            _ => new ConcurrentHashSet<TaskItem> { original },
+            (_, set) => { set.Add(original); return set; });
+    }
+
+    if (isImportant is not null && original.IsImportant != isImportant.Value)
+    {
+        if (tasksByIsImportant.TryGetValue(original.IsImportant, out var oldImportanceSet))
+            oldImportanceSet.TryRemove(original, out _);
+
+        original.IsImportant = isImportant.Value;
+
+        tasksByIsImportant.AddOrUpdate(original.IsImportant,
+            _ => new ConcurrentHashSet<TaskItem> { original },
+            (_, set) => { set.Add(original); return set; });
+    }
+
+    if (newTags is not null)
+    {
+        HashSet<string> newTagsSet = new HashSet<string>(newTags.Select(TaskItem.BuildTagName));
+
+        // Remove task from old tag sets
+        foreach (string tag in original.Tags)
+        {
+            if (!newTagsSet.Contains(tag))
+                original.RemoveTag(tag);
+        }
+
+        // Add task to new tag sets
+        foreach (string tag in newTagsSet)
+        {
+            if (!original.Tags.Contains(tag))
+                original.AddTag(tag);
+        }
+    }
+
+    if (!string.IsNullOrEmpty(newTitle) &&newTitle != originalTitle)
+    {
+        TaskItem itemToDelete = new TaskItem(originalTitle, this);
+        tasks.TryRemove(itemToDelete, out _);
+        if (itemToDelete.FilePath.Exists) itemToDelete.FilePath.Delete();
+        original.Title = newTitle;
+        tasks.Add(original);
+    }
+    if (!string.IsNullOrEmpty(newDescription)) original.Description = newDescription;
+
+    original.Save();
+    requiringSave.TryRemove(original, out _);
+
+    return original;
+}
+
     
     /// <summary>
     /// Changes the urgency of a given task and updates the tasksByUrgency index accordingly.
