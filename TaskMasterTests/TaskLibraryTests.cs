@@ -50,13 +50,12 @@ public class TaskLibraryTests
     public void TrySaveTask()
     {
         TaskItemLibrary library = new TaskItemLibrary("TestLibrarySave");
-        TaskItem item = library.GetOrCreate("testtask1");
-        item.IsImportant = true;
-        item.IsUrgent = true;
-        item.Description = "this is a test description";
-        item.AddTag("testtag1");
-        item.AddTag("anothertesttag");
-        library.Save();
+        TaskItem item = library.GetOrCreate(
+            "testtask1",
+            newDescription: "this is a test description",
+            isImportant: true,
+            isUrgent: true,
+            newTags: ["testtag1", "anothertesttag"]);
         Assert.DoesNotContain(item, library.requiringSave);
         
         TaskItemLibrary loaded = new TaskItemLibrary("TestLibrarySave");
@@ -71,24 +70,20 @@ public class TaskLibraryTests
     public void TryDeleteTask()
     {
         TaskItemLibrary library = new TaskItemLibrary("TestLibraryDelete");
-        TaskItem item = library.GetOrCreate("testtask1");
-        item.IsImportant = true;
-        item.IsUrgent = true;
-        item.Description = "this is a test description";
-        item.AddTag("testtag1");
-        item.AddTag("anothertesttag");
-        library.Save();
+        TaskItem item = library.GetOrCreate(
+            "testtask1",
+            newDescription: "this is a test description",
+            isImportant: true,
+            isUrgent: true,
+            newTags: ["testtag1", "anothertesttag"]);
         
-        item.MarkForDeletion();
+        item.Delete();
         Assert.DoesNotContain(item, library.tasks);
         Assert.DoesNotContain(item, library.tasksByIsImportant[true]);
         Assert.DoesNotContain(item, library.tasksByIsUrgent[true]);
         Assert.DoesNotContain(item, library.requiringSave);
         Assert.DoesNotContain("testtag1", library.TasksByTags.Keys);
         Assert.DoesNotContain("anothertesttag", library.TasksByTags.Keys);
-        Assert.Contains(item, library.trashBin);
-        library.Save();
-        Assert.DoesNotContain(item, library.trashBin);
         
         TaskItemLibrary loaded = new TaskItemLibrary("TestLibraryDelete");
         Assert.DoesNotContain(item, loaded.tasks);

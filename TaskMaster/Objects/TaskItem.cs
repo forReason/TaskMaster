@@ -73,7 +73,7 @@ namespace TaskMaster.Objects
         /// </summary>
         /// <param name="tag">The raw tag string.</param>
         /// <returns>Normalized tag string.</returns>
-        private static string BuildTagName(string tag)
+        internal static string BuildTagName(string tag)
         {
             if (string.IsNullOrEmpty(tag)) throw new NullReferenceException("tag seems to be empty or not parsable!");
             StringBuilder tagBuilder = new StringBuilder();
@@ -163,6 +163,19 @@ namespace TaskMaster.Objects
         /// </summary>
         public TaskItemLibrary ParentLibrary { get; set; }
         
+        public string Serialize()
+        {
+            var data = new
+            {
+            Title = this.Title,
+            Description = this.Description,
+            Tags = this.Tags,
+            IsUrgent = this.IsUrgent,
+            IsImportant = this.IsImportant
+            };
+            string json = JsonSerializer.Serialize(data, new JsonSerializerOptions { WriteIndented = true });
+            return json;
+        }
          /// <summary>
         /// Saves the current TaskItem to a file as JSON.
         /// </summary>
@@ -171,18 +184,8 @@ namespace TaskMaster.Objects
             if (!changesMade) return;
             if (!ParentLibrary.Directory.Exists) ParentLibrary.Directory.Create();
             string fileName = Path.Combine(ParentLibrary.Directory.FullName, BuildTagName(Title) + ".task");
-
-            var data = new
-            {
-                Title = this.Title,
-                Description = this.Description,
-                Tags = this.Tags,
-                IsUrgent = this.IsUrgent,
-                IsImportant = this.IsImportant
-            };
-
-            string json = JsonSerializer.Serialize(data, new JsonSerializerOptions { WriteIndented = true });
-            File.WriteAllText(fileName, json);
+            
+            File.WriteAllText(fileName, Serialize());
             changesMade = false;
             FilePath.Refresh();
         }
@@ -228,7 +231,7 @@ namespace TaskMaster.Objects
             return task;
         }
 
-        public void MarkForDeletion()
+        public void Delete()
         {
             this.ParentLibrary.DeleteTask(this);
         }

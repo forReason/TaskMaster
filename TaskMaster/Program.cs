@@ -1,13 +1,14 @@
-var builder = WebApplication.CreateBuilder(args);
+using TaskMaster.Objects;
 
-// Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+//--------------------------------------------------------
+// Setup Swagger in development
+//--------------------------------------------------------
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -16,29 +17,50 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
+//--------------------------------------------------------
+// Initialize the TaskItemLibrary
+//--------------------------------------------------------
+var library = new TaskItemLibrary("DefaultLibrary");
 
-app.MapGet("/weatherforecast", () =>
+//--------------------------------------------------------
+// Endpoints
+//--------------------------------------------------------
+
+/// <summary>
+/// Returns all tasks.
+/// </summary>
+app.MapGet("/tasks", () =>
     {
-        var forecast = Enumerable.Range(1, 5).Select(index =>
-                new WeatherForecast
-                (
-                    DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-                    Random.Shared.Next(-20, 55),
-                    summaries[Random.Shared.Next(summaries.Length)]
-                ))
-            .ToArray();
-        return forecast;
+        List<string> results = new();
+        foreach (TaskItem item in library.tasks) results.Add(item.Serialize());
+        return results;
     })
-    .WithName("GetWeatherForecast")
-    .WithOpenApi();
+    .WithName("GetAllTasks");
+
+
+/// <summary>
+/// Creates a new task or updates an existing one.
+/// </summary>
+app.MapPost("/tasks", (string title, string? newTitle ,string? description, bool? isUrgent, bool? isImportant, string[]? tags) =>
+    {
+        var task = library.GetOrCreate(title, newTitle: newTitle, newDescription: description, isUrgent: isUrgent, isImportant: isImportant, newTags: tags);
+        return Results.Created($"/tasks/{task.Title}", task.Serialize());
+    })
+    .WithName("CreateTask");
+
+/// <summary>
+/// Deletes a task by name.
+/// </summary>
+app.MapDelete("/tasks/{taskName}", (string taskName) =>
+    {
+        var task = library.GetOrCreate(taskName);
+        if (task is null)
+        {
+            return Results.NotFound();
+        }
+        library.DeleteTask(task);
+        return Results.Ok();
+    })
+    .WithName("DeleteTask");
 
 app.Run();
-
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}

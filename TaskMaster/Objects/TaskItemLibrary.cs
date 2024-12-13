@@ -17,7 +17,6 @@ public class TaskItemLibrary
     public ConcurrentDictionary<bool, ConcurrentHashSet<TaskItem>> tasksByIsUrgent = new();
     public ConcurrentDictionary<bool, ConcurrentHashSet<TaskItem>> tasksByIsImportant = new();
     public ConcurrentDictionary<string, ConcurrentHashSet<TaskItem>> TasksByTags = new();
-    public ConcurrentHashSet<TaskItem> trashBin = new();
     public ConcurrentHashSet<TaskItem> requiringSave = new();
     public ConcurrentHashSet<FileInfo> NameTrashBin = new();
 
@@ -65,7 +64,7 @@ public class TaskItemLibrary
     /// <summary>
     /// Retrieves an existing task or creates a new one if it doesn't exist.
     /// </summary>
-    public TaskItem GetOrCreate(string taskName)
+    internal TaskItem GetOrCreate(string taskName)
     {
         // If the current implementation uses a dictionary keyed by taskName:
         // Change 'tasks' to a ConcurrentDictionary<string, TaskItem> instead of a ConcurrentHashSet<TaskItem>.
@@ -79,12 +78,42 @@ public class TaskItemLibrary
         foreach (string tag in query.Tags) AddTaskTag(query, tag);
         return query;
     }
+
+    public TaskItem GetOrCreate(string originalTitle, 
+        string? newTitle = null, string? newDescription = null, bool? isUrgent = null, bool? isImportant = null, string[]? newTags = null)
+    {
+        TaskItem original = GetOrCreate(originalTitle);
+        if (!string.IsNullOrEmpty(newTitle)) original.Title = newTitle;
+        if (!string.IsNullOrEmpty(newDescription)) original.Description = newDescription;
+        if (isUrgent is not null) original.IsUrgent = isUrgent.Value;
+        if (isImportant is not null) original.IsImportant = isImportant.Value;
+        if (newTags is not null)
+        {
+            HashSet<string> newTagsSet = new HashSet<string>();
+            foreach (string tag in newTags)
+            {
+                newTagsSet.Add(TaskItem.BuildTagName(tag));
+            }
+
+            foreach (string tag in original.Tags)
+            {
+                if (!newTagsSet.Contains(tag)) original.RemoveTag(tag);
+            }
+            foreach (string tag in newTagsSet)                      
+            {                                                          
+                if (!original.Tags.Contains(tag)) original.AddTag(tag);
+            }                                                          
+        }
+        original.Save();
+        requiringSave.TryRemove(original, out _);
+        return original;
+    }
     
     /// <summary>
     /// Changes the urgency of a given task and updates the tasksByUrgency index accordingly.
     /// Returns true if successful, false if the task doesn't exist.
     /// </summary>
-    public bool ChangeTaskUrgency(TaskItem taskItem)
+    internal bool ChangeTaskUrgency(TaskItem taskItem)
     {
         if (!tasks.TryGet(taskItem, out TaskItem task))
             return false;
@@ -102,7 +131,7 @@ public class TaskItemLibrary
     /// Changes the importance of a given task and updates the tasksByImportance index accordingly.
     /// Returns true if successful, false if the task doesn't exist.
     /// </summary>
-    public bool ChangeTaskImportance(TaskItem taskItem)
+    internal bool ChangeTaskImportance(TaskItem taskItem)
     {
         if (!tasks.TryGet(taskItem, out var task))
             return false;
@@ -128,11 +157,12 @@ public class TaskItemLibrary
         {
             RemoveTaskTag(taskItem, tag);
         }
-        trashBin.Add(taskItem);
         requiringSave.TryRemove(taskItem, out _);
+        taskItem.FilePath.Refresh();                            
+        if (taskItem.FilePath.Exists) taskItem.FilePath.Delete();   
     }
     
-    public void Save()
+    internal void Save()
     {
         foreach (FileInfo path in NameTrashBin)
         {
@@ -145,21 +175,6 @@ public class TaskItemLibrary
             catch (Exception ex)
             {
                 Console.WriteLine("failed to delete old task: "+path.Name);
-                Console.WriteLine(ex.Message);
-            }
-        }
-
-        foreach (TaskItem task in trashBin)
-        {
-            try
-            {
-                task.FilePath.Refresh();
-                if (task.FilePath.Exists) task.FilePath.Delete();
-                trashBin.TryRemove(task, out _);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("failed to delete old task: " + task.FilePath.Name);
                 Console.WriteLine(ex.Message);
             }
         }
