@@ -1,7 +1,7 @@
 import { fetchTasks } from './services/taskService.js';
 import { setupContainers } from './events/containerEvents.js';
 import { setupPlusButton } from './events/plusButtonEvents.js';
-import { createTaskCard, getContainerId } from './utils/taskUtils.js';
+import { createTaskCard, getContainerId, highlightActiveTask } from './utils/taskUtils.js';
 document.addEventListener('DOMContentLoaded', async () => {
     console.log("starting app init");
     try {
@@ -16,6 +16,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
 
         setupPlusButton();
+        await highlightActiveTask();
     } catch (error) {
         console.error('Error initializing app:', error);
     }

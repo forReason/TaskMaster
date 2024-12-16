@@ -65,18 +65,22 @@ export async function getActiveTask() {
         throw new Error(`Failed to fetch active task: ${response.statusText}`);
     }
 
-    const activeTask = await response.text(); // Active task is returned as plain text
-    console.log(`Active task fetched: ${activeTask}`);
+    let activeTask = await response.text(); // Get the raw response as text
+    console.log(`Raw active task fetched: ${activeTask}`);
+
+    // Strip leading and trailing quotes (single or double)
+    activeTask = activeTask.replace(/^"+|"+$/g, '').trim();
+    console.log(`Sanitized active task: ${activeTask}`);
+
     return activeTask;
 }
 
 // Set the active task
 export async function setActiveTask(taskId) {
     try {
-        const response = await fetch(`http://localhost:5169/tasks/active`, {
+        const response = await fetch(`http://localhost:5169/tasks/active?taskId=${encodeURIComponent(taskId)}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ taskId }),
         });
 
         if (!response.ok) {

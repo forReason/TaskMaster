@@ -1,4 +1,4 @@
-import {updateTaskText, deleteTask} from "../services/taskService.js";
+import {updateTaskText, deleteTask, getActiveTask, setActiveTask} from "../services/taskService.js";
 
 export function createTaskCard(task) {
     const card = document.createElement('div');
@@ -51,6 +51,29 @@ export function createTaskCard(task) {
     deleteBtn.textContent = 'Delete';
     deleteBtn.style.display = 'none';
 
+    // Set Active Task button
+    const setActiveBtn = document.createElement('button');
+    setActiveBtn.classList.add('set-active-btn');
+    setActiveBtn.textContent = 'Set Active';
+    setActiveBtn.title = 'Set this task as the active task';
+
+
+    // Set Active Task button functionality
+    setActiveBtn.addEventListener('click', async () => {
+        try {
+            const success = await setActiveTask(task.title);
+            if (success) {
+                alert(`Task "${task.title}" is now the active task.`);
+                await highlightActiveTask(); // Update the UI to reflect the active task
+            } else {
+                alert(`Failed to set task "${task.title}" as active.`);
+            }
+        } catch (error) {
+            console.error(`Error setting active task: ${error}`);
+            alert('An error occurred while setting the active task.');
+        }
+    });
+
     // Edit button functionality
     let isEditing = false;
     editBtn.addEventListener('click', () => {
@@ -64,7 +87,6 @@ export function createTaskCard(task) {
         editBtn.textContent = isEditing ? 'Exit' : '✎';
 
         if (!isEditing) {
-            // Discard unsaved changes
             titleEl.textContent = task.title || 'Untitled Task';
             descriptionEl.textContent = task.description || 'No description available.';
         }
@@ -96,18 +118,18 @@ export function createTaskCard(task) {
         try {
             const success = await deleteTask(task.title);
             if (success) {
-                card.remove(); // Remove the task from the DOM
+                card.remove();
             } else {
                 alert(`Failed to delete task: "${task.title}".`);
             }
         } catch (error) {
             console.error(`Error deleting task "${task.title}":`, error);
-            alert(`An error occurred while deleting the task: "${task.title}".`);
+            alert('An error occurred while deleting the task.');
         }
     });
 
     // Append elements to the card
-    card.append(editBtn, titleEl, descriptionEl, saveBtn, cancelBtn, deleteBtn);
+    card.append(editBtn, titleEl, descriptionEl, saveBtn, cancelBtn, deleteBtn, setActiveBtn);
 
     // Drag-and-drop functionality
     card.addEventListener('dragstart', (e) => {
@@ -181,6 +203,27 @@ export async function markTaskSuccess(taskId) {
         return false;
     }
 }
+// Highlight the active task
+export async function highlightActiveTask() {
+    try {
+        const activeTaskId = await getActiveTask();
+        console.log(`Sanitized active task fetched: ${activeTaskId}`);
+
+        const allCards = document.querySelectorAll('.card');
+        allCards.forEach(card => {
+            const taskTitle = card.dataset.title;
+            if (taskTitle === activeTaskId) {
+                console.log(`Highlighting active task: ${taskTitle}`);
+                card.classList.add('active-task');
+            } else {
+                card.classList.remove('active-task');
+            }
+        });
+    } catch (error) {
+        console.error('Error highlighting active task:', error);
+    }
+}
+
 
 export function getContainerId(task) {
     return task.isUrgent && task.isImportant
