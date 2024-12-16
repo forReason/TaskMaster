@@ -45,6 +45,18 @@ body {
     cursor: grab;
     position: relative; /* To position buttons inside the card */
 }
+.card:active {
+    cursor: grabbing; /* Show grabbing state while dragging */
+}
+.card-title[contenteditable="true"],
+.card-description[contenteditable="true"] {
+    cursor: text; /* Indicates text editing */
+}
+
+.card-title[contenteditable="false"],
+.card-description[contenteditable="false"] {
+    cursor: grabbing; /* Standard cursor for non-editable state */
+}
 
 /* Title and Description */
 .card-title {

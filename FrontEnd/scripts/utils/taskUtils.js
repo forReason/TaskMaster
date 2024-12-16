@@ -13,35 +13,43 @@ export function createTaskCard(task) {
     titleEl.textContent = task.title || 'Untitled Task';
     titleEl.contentEditable = false;
 
+    // Prevent dragging on title field
+    titleEl.addEventListener('mousedown', (e) => e.stopPropagation());
+    titleEl.addEventListener('dragstart', (e) => e.preventDefault());
+
     // Description element
     const descriptionEl = document.createElement('div');
     descriptionEl.classList.add('card-description');
     descriptionEl.textContent = task.description || 'No description available.';
     descriptionEl.contentEditable = false;
 
+    // Prevent dragging on description field
+    descriptionEl.addEventListener('mousedown', (e) => e.stopPropagation());
+    descriptionEl.addEventListener('dragstart', (e) => e.preventDefault());
+
     // Edit button
     const editBtn = document.createElement('button');
     editBtn.classList.add('edit-btn');
-    editBtn.innerHTML = '✎'; // Use an icon library like Font Awesome or Ionicons
+    editBtn.innerHTML = '✎';
     editBtn.title = 'Edit Task';
 
     // Save button
     const saveBtn = document.createElement('button');
     saveBtn.classList.add('save-btn');
     saveBtn.textContent = 'Save';
-    saveBtn.style.display = 'none'; // Hidden initially
+    saveBtn.style.display = 'none';
 
     // Cancel button
     const cancelBtn = document.createElement('button');
     cancelBtn.classList.add('cancel-btn');
     cancelBtn.textContent = 'Cancel';
-    cancelBtn.style.display = 'none'; // Hidden initially
+    cancelBtn.style.display = 'none';
 
     // Delete button
     const deleteBtn = document.createElement('button');
     deleteBtn.classList.add('delete-btn');
     deleteBtn.textContent = 'Delete';
-    deleteBtn.style.display = 'none'; // Hidden initially
+    deleteBtn.style.display = 'none';
 
     // Edit button functionality
     let isEditing = false;
@@ -71,7 +79,6 @@ export function createTaskCard(task) {
         if (success) {
             task.title = newTitle;
             task.description = newDescription;
-            isEditing = false;
             editBtn.click();
             await markTaskSuccess(task.id);
         }
@@ -79,8 +86,9 @@ export function createTaskCard(task) {
 
     // Cancel button functionality
     cancelBtn.addEventListener('click', () => {
-        isEditing = false;
-        editBtn.click(); // Exit edit mode
+        titleEl.textContent = task.title || 'Untitled Task';
+        descriptionEl.textContent = task.description || 'No description available.';
+        editBtn.click();
     });
 
     // Delete button functionality
@@ -92,7 +100,6 @@ export function createTaskCard(task) {
             const success = await deleteTask(task.title);
             if (success) {
                 card.remove(); // Remove the task from the DOM
-                alert(`Task "${task.title}" deleted successfully.`);
             } else {
                 alert(`Failed to delete task: "${task.title}".`);
             }
@@ -112,6 +119,7 @@ export function createTaskCard(task) {
 
     return card;
 }
+
 
 
 export function getContainerId(task) {
