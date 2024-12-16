@@ -106,11 +106,11 @@ button {
 }
 
 .sparkle {
-    position: absolute; /* Position sparkles freely within the card */
+    position: absolute;
     background: radial-gradient(circle, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0));
     border-radius: 50%;
     pointer-events: none;
-    animation: sparkle-move 2s ease-in-out infinite; /* Continuous animation loop */
+    animation: sparkle-move 2s ease-in-out; /* Duration matches sparkleLifetime */
     opacity: 0;
 }
 

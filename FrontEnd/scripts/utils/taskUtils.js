@@ -258,7 +258,9 @@ export async function highlightActiveTask() {
 
 const sparkleIntervals = new Map(); // Store sparkle intervals for active tasks
 
-function createSparkles(targetElement, sparkleCount = 50, sparkleInterval = 1000) {
+function createSparkles(targetElement, sparkleCount = 50, sparkleInterval = 1000, sparkleLifetime = 2000) {
+    const rect = targetElement.getBoundingClientRect(); // Dynamically get the card's size and position
+
     // Clean up existing interval if one exists for this element
     if (sparkleIntervals.has(targetElement)) {
         clearInterval(sparkleIntervals.get(targetElement));
@@ -267,12 +269,7 @@ function createSparkles(targetElement, sparkleCount = 50, sparkleInterval = 1000
 
     // Function to generate sparkles
     function generateSparkles() {
-        // Remove expired sparkles but keep current ones animating
-        targetElement.querySelectorAll('.sparkle.expired').forEach(sparkle => sparkle.remove());
-
-        const rect = targetElement.getBoundingClientRect(); // Dynamically get the card's size and position
-
-        // Create new sparkles
+        const rect = targetElement.getBoundingClientRect(); // Recalculate size dynamically
         for (let i = 0; i < sparkleCount; i++) {
             const sparkle = document.createElement('div');
             sparkle.classList.add('sparkle');
@@ -287,13 +284,14 @@ function createSparkles(targetElement, sparkleCount = 50, sparkleInterval = 1000
             sparkle.style.left = `${left}px`;
             sparkle.style.top = `${top}px`;
             sparkle.style.animationDelay = `${Math.random()}s`; // Random animation start
-            sparkle.classList.add('expired'); // Mark sparkle as removable after the animation cycle
 
             // Append sparkle to the target element
             targetElement.appendChild(sparkle);
 
-            // Remove "expired" class after animation, keeping the sparkle visible during its lifetime
-            sparkle.addEventListener('animationend', () => sparkle.classList.remove('expired'));
+            // Remove the sparkle after its lifetime
+            setTimeout(() => {
+                sparkle.remove();
+            }, sparkleLifetime);
         }
     }
 
