@@ -7,9 +7,9 @@ export function createTaskCard(task) {
     card.draggable = true;
     card.dataset.title = task.title;
 
-    // Wrapper for content
-    const contentWrapper = document.createElement('div');
-    contentWrapper.classList.add('card-content');
+    // Header section for title and edit button
+    const header = document.createElement('div');
+    header.classList.add('card-header');
 
     // Title element
     const titleEl = document.createElement('div');
@@ -20,6 +20,19 @@ export function createTaskCard(task) {
     // Prevent dragging on title field
     titleEl.addEventListener('dragstart', (e) => e.stopPropagation());
 
+    // Edit button
+    const editBtn = document.createElement('button');
+    editBtn.classList.add('edit-btn');
+    editBtn.innerHTML = '✎';
+    editBtn.title = 'Edit Task';
+
+    // Append title and edit button to header
+    header.append(titleEl, editBtn);
+
+    // Content section for description
+    const contentWrapper = document.createElement('div');
+    contentWrapper.classList.add('card-content');
+
     // Description element
     const descriptionEl = document.createElement('div');
     descriptionEl.classList.add('card-description');
@@ -29,11 +42,12 @@ export function createTaskCard(task) {
     // Prevent dragging on description field
     descriptionEl.addEventListener('dragstart', (e) => e.stopPropagation());
 
-    // Edit button
-    const editBtn = document.createElement('button');
-    editBtn.classList.add('edit-btn');
-    editBtn.innerHTML = '✎';
-    editBtn.title = 'Edit Task';
+    // Append description to content wrapper
+    contentWrapper.append(descriptionEl);
+
+    // Action buttons row
+    const actionButtonRow = document.createElement('div');
+    actionButtonRow.classList.add('action-button-row');
 
     // Save button
     const saveBtn = document.createElement('button');
@@ -60,16 +74,11 @@ export function createTaskCard(task) {
     setActiveBtn.title = 'Set this task as the active task';
     setActiveBtn.style.display = 'none';
 
-    // Append title and description to the content wrapper
-    contentWrapper.append(titleEl, descriptionEl);
+    // Append buttons to the action button row
+    actionButtonRow.append(saveBtn, cancelBtn, deleteBtn, setActiveBtn);
 
-    // Button wrapper for right-aligned buttons
-    const buttonWrapper = document.createElement('div');
-    buttonWrapper.classList.add('button-wrapper');
-    buttonWrapper.append(editBtn, saveBtn, cancelBtn, deleteBtn, setActiveBtn);
-
-    // Append elements to the card
-    card.append(contentWrapper, buttonWrapper);
+    // Append all elements to the card
+    card.append(header, contentWrapper, actionButtonRow);
 
     // Set Active Task button functionality
     setActiveBtn.addEventListener('click', async () => {
@@ -152,8 +161,6 @@ export function createTaskCard(task) {
     return card;
 }
 
-
-
 export async function saveTask(task, newTitle, newDescription) {
     if (!newTitle) {
         alert('Task title cannot be empty.');
@@ -233,55 +240,79 @@ export async function highlightActiveTask() {
             if (taskTitle === activeTaskId) {
                 console.log(`Highlighting active task: ${taskTitle}`);
                 card.classList.add('active-task');
-                createSparkles(card); // Add sparkles
+                createSparkles(card); // Start sparkles for the active task
             } else {
                 card.classList.remove('active-task');
+                // Cleanup sparkles for non-active tasks
+                if (card.cleanupSparkles) {
+                    card.cleanupSparkles();
+                }
             }
         });
     } catch (error) {
         console.error('Error highlighting active task:', error);
     }
 }
-function createSparkles(targetElement, sparkleCount = 50, interval = 1000) {
-    // Clear existing sparkles to prevent overlap
-    targetElement.querySelectorAll('.sparkle').forEach(sparkle => sparkle.remove());
 
-    const rect = targetElement.getBoundingClientRect(); // Get the target's size and position
 
+
+const sparkleIntervals = new Map(); // Store sparkle intervals for active tasks
+
+function createSparkles(targetElement, sparkleCount = 50, sparkleInterval = 1000) {
+    // Clean up existing interval if one exists for this element
+    if (sparkleIntervals.has(targetElement)) {
+        clearInterval(sparkleIntervals.get(targetElement));
+        sparkleIntervals.delete(targetElement);
+    }
+
+    // Function to generate sparkles
     function generateSparkles() {
+        // Remove expired sparkles but keep current ones animating
+        targetElement.querySelectorAll('.sparkle.expired').forEach(sparkle => sparkle.remove());
+
+        const rect = targetElement.getBoundingClientRect(); // Dynamically get the card's size and position
+
+        // Create new sparkles
         for (let i = 0; i < sparkleCount; i++) {
             const sparkle = document.createElement('div');
             sparkle.classList.add('sparkle');
 
             // Randomize size and position
-            const size = Math.random() * 3 + 1; // Random size between 2px and 7px
-            const left = Math.random() * (rect.width - size); // Avoid exceeding width
-            const top = Math.random() * (rect.height - size); // Avoid exceeding height
-
+            const size = Math.random() * 5 + 5; // Random size between 5px and 10px
+            const left = Math.random() * (rect.width - size); // Within the element's width
+            const top = Math.random() * (rect.height - size); // Within the element's height
 
             sparkle.style.width = `${size}px`;
             sparkle.style.height = `${size}px`;
             sparkle.style.left = `${left}px`;
             sparkle.style.top = `${top}px`;
-            sparkle.style.animationDelay = `${Math.random()}s`; // Random delay for staggered effect
+            sparkle.style.animationDelay = `${Math.random()}s`; // Random animation start
+            sparkle.classList.add('expired'); // Mark sparkle as removable after the animation cycle
 
             // Append sparkle to the target element
             targetElement.appendChild(sparkle);
 
-            // Automatically remove the sparkle after animation
-            sparkle.addEventListener('animationend', () => sparkle.remove());
+            // Remove "expired" class after animation, keeping the sparkle visible during its lifetime
+            sparkle.addEventListener('animationend', () => sparkle.classList.remove('expired'));
         }
     }
 
     // Generate sparkles initially
     generateSparkles();
 
-    // Regenerate sparkles at the defined interval
-    const sparkleInterval = setInterval(generateSparkles, interval);
+    // Set interval to continuously generate sparkles
+    const intervalId = setInterval(generateSparkles, sparkleInterval);
+    sparkleIntervals.set(targetElement, intervalId);
 
-    // Return a cleanup function to stop the interval
-    return () => clearInterval(sparkleInterval);
+    // Cleanup function for when sparkles are no longer needed
+    targetElement.cleanupSparkles = () => {
+        clearInterval(intervalId); // Clear interval
+        sparkleIntervals.delete(targetElement); // Remove from Map
+        targetElement.querySelectorAll('.sparkle').forEach(sparkle => sparkle.remove()); // Remove sparkles
+    };
 }
+
+
 
 export function getContainerId(task) {
     return task.isUrgent && task.isImportant
