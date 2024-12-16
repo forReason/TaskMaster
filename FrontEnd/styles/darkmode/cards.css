@@ -4,11 +4,21 @@
     border-color: rgba(30, 60, 30, 0.7);
     color: #b8d8b8;
 }
+#urgent-important .card .card-description {
+    color: #a3cfa3; /* Consistent with card text color */
+    font-weight: normal; /* Ensure normal font weight for subtlety */
+    opacity: 0.9; /* Slightly reduced opacity for less prominence */
+}
 
 #not-urgent-important .card {
     background-color: rgba(20, 50, 60, 0.3);
     border-color: rgba(20, 50, 60, 0.7);
     color: #aed4d9;
+}
+#not-urgent-important .card .card-description {
+    color: #9abfd7;
+    font-weight: normal;
+    opacity: 0.9;
 }
 
 #urgent-not-important .card {
@@ -16,27 +26,29 @@
     border-color: rgba(60, 40, 20, 0.7);
     color: #e6c4a8;
 }
-
+#urgent-not-important .card .card-description {
+    color: #d4b19a;
+    font-weight: normal;
+    opacity: 0.9;
+}
 #not-urgent-not-important .card {
     background-color: rgba(60, 20, 20, 0.3);
     border-color: rgba(60, 20, 20, 0.7);
     color: #e6aaaa;
 }
 
+#not-urgent-not-important .card .card-description {
+    color: #d4a6a6;
+    font-weight: normal;
+    opacity: 0.9;
+}
+
 
 /* General Edit Button Styling */
 .edit-btn {
-    border: none;
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
     color: #ffffff;
-    cursor: pointer;
-    transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
+
 
 /* Priority-Specific Edit Buttons with More Vivid Default Colors */
 #urgent-important .edit-btn {
@@ -78,12 +90,6 @@
 #not-urgent-not-important .edit-btn:focus {
     background-color: rgba(90, 20, 20, 1); /* Slightly darker vivid red */
     box-shadow: 0 0 8px rgba(60, 20, 20, 0.7);
-}
-
-/* Card Focus State */
-.card:focus-within {
-    outline: 2px solid rgba(255, 255, 255, 0.5); /* Subtle focus outline for better visibility */
-    outline-offset: 2px;
 }
 
 /* Card Hover State */

@@ -1,52 +1,81 @@
+/* General Button Styles */
+button {
+    background-color: #444; /* Darker neutral background */
+    color: #e0e0e0; /* Light gray text for contrast */
+    border: none; /* Remove default border */
+    padding: 8px 16px; /* Consistent padding */
+    border-radius: 4px; /* Slightly rounded corners */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: background-color 0.3s ease, box-shadow 0.3s ease; /* Smooth transitions */
+}
+
+button:hover {
+    background-color: #666; /* Darker on hover */
+}
+
+/* Plus Button */
 .plus-button {
-    background-color: #125a9e; /* Darkened and desaturated blue */
+    background-color: #0e4a7a; /* Darker and more muted blue */
     color: #cccccc; /* Softer text color for reduced contrast */
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); /* Subtler shadow for a more understated look */
     transition: background-color 0.3s ease, box-shadow 0.3s ease; /* Smooth transition for hover effects */
 }
 
 .plus-button:hover {
-    background-color: #0d4476; /* Slightly darker on hover */
+    background-color: #0a3a60; /* Slightly darker on hover */
     box-shadow: 0 3px 6px rgba(0, 0, 0, 0.4); /* Slightly enhanced shadow on hover */
 }
 
-
+/* Save Button */
 .save-btn {
-    background-color: #2e7d32;
+    background-color: #27632a; /* Darker green */
+    color: #ffffff; /* White text for better readability */
 }
 
 .save-btn:hover {
-    background-color: #1b5e20;
+    background-color: #1f4d1f; /* Slightly darker on hover */
 }
 
+/* Cancel Button */
 .cancel-btn {
-    background-color: #f9a825;
+    background-color: #d18e1f; /* Darker, more muted yellow */
+    color: #ffffff; /* White text for better readability */
 }
 
 .cancel-btn:hover {
-    background-color: #c17900;
+    background-color: #a16c00; /* Slightly darker on hover */
 }
 
+/* Delete Button */
 .delete-btn {
-    background-color: #c62828;
+    background-color: #a21c1c; /* Darker red */
+    color: #ffffff; /* White text for better readability */
 }
 
 .delete-btn:hover {
-    background-color: #8e0000;
+    background-color: #750000; /* Slightly darker on hover */
 }
+
+/* Set Active Button */
 .set-active-btn {
-    background-color: #1e88e5;
+    background-color: #1769aa; /* Darker and more muted blue */
+    color: #ffffff; /* White text for better readability */
 }
 
 .set-active-btn:hover {
-    background-color: #1565c0;
+    background-color: #125a8e; /* Slightly darker on hover */
 }
 
-button {
-    background-color: #333;
-    color: #e0e0e0;
+/* Active State */
+button:active {
+    transform: translateY(1px); /* Slight press effect */
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
 }
 
-button:hover {
-    background-color: #555;
+/* Disabled State */
+button:disabled {
+    background-color: #777777; /* Gray background */
+    color: #cccccc; /* Light gray text */
+    cursor: not-allowed; /* Not-allowed cursor */
+    box-shadow: none; /* Remove shadow */
 }

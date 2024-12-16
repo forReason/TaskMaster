@@ -7,6 +7,10 @@ export function createTaskCard(task) {
     card.draggable = true;
     card.dataset.title = task.title;
 
+    // Wrapper for content
+    const contentWrapper = document.createElement('div');
+    contentWrapper.classList.add('card-content');
+
     // Title element
     const titleEl = document.createElement('div');
     titleEl.classList.add('card-title');
@@ -56,12 +60,22 @@ export function createTaskCard(task) {
     setActiveBtn.title = 'Set this task as the active task';
     setActiveBtn.style.display = 'none';
 
+    // Append title and description to the content wrapper
+    contentWrapper.append(titleEl, descriptionEl);
+
+    // Button wrapper for right-aligned buttons
+    const buttonWrapper = document.createElement('div');
+    buttonWrapper.classList.add('button-wrapper');
+    buttonWrapper.append(editBtn, saveBtn, cancelBtn, deleteBtn, setActiveBtn);
+
+    // Append elements to the card
+    card.append(contentWrapper, buttonWrapper);
 
     // Set Active Task button functionality
     setActiveBtn.addEventListener('click', async () => {
         try {
             const success = await setActiveTask(task.title);
-            if (success) {;
+            if (success) {
                 await highlightActiveTask(); // Update the UI to reflect the active task
             } else {
                 alert(`Failed to set task "${task.title}" as active.`);
@@ -86,7 +100,7 @@ export function createTaskCard(task) {
         cancelBtn.style.display = isEditing ? 'inline-block' : 'none';
         deleteBtn.style.display = isEditing ? 'inline-block' : 'none';
         setActiveBtn.style.display = isEditing ? 'inline-block' : 'none';
-        editBtn.textContent = isEditing ? 'Exit' : '✎';
+        editBtn.textContent = isEditing ? 'X' : '✎';
 
         if (!isEditing) {
             titleEl.textContent = task.title || 'Untitled Task';
@@ -130,9 +144,6 @@ export function createTaskCard(task) {
         }
     });
 
-    // Append elements to the card
-    card.append(editBtn, titleEl, descriptionEl, saveBtn, cancelBtn, deleteBtn, setActiveBtn);
-
     // Drag-and-drop functionality for the card
     card.addEventListener('dragstart', (e) => {
         e.dataTransfer.setData('text/plain', card.id);
@@ -140,6 +151,7 @@ export function createTaskCard(task) {
 
     return card;
 }
+
 
 
 export async function saveTask(task, newTitle, newDescription) {

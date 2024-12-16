@@ -2,46 +2,83 @@
 body::-webkit-scrollbar,
 .container::-webkit-scrollbar,
 .card::-webkit-scrollbar {
-    width: 8px; /* Set the width of the scrollbar */
-    height: 8px; /* Set the height of the scrollbar for horizontal scrolling */
+    width: 8px;
+    height: 8px;
 }
 
 body::-webkit-scrollbar-track,
 .container::-webkit-scrollbar-track,
 .card::-webkit-scrollbar-track {
-    background: #1a1a1a; /* Dark background for the track */
-    border-radius: 4px; /* Optional: Round the track corners */
+    background: #1a1a1a;
+    border-radius: 4px;
 }
 
 /* Default Thumb Styling */
 body::-webkit-scrollbar-thumb,
 .container::-webkit-scrollbar-thumb,
 .card::-webkit-scrollbar-thumb {
-    background-color: #555; /* Default thumb color */
-    border-radius: 4px; /* Round thumb corners */
-    border: 2px solid #1a1a1a; /* Match track padding */
+    background-color: #555;
+    border-radius: 4px;
+    border: 2px solid #1a1a1a;
 }
 
-/* Hover Effects for Thumbs */
+/* Hover Effects for Default Thumbs */
 body::-webkit-scrollbar-thumb:hover,
 .container::-webkit-scrollbar-thumb:hover,
 .card::-webkit-scrollbar-thumb:hover {
-    background-color: #777; /* Lighter color on hover */
+    background-color: #777;
 }
 
-/* Category-Based Scrollbars with Class Rules */
-.urgent-important-scrollable::-webkit-scrollbar-thumb {
-    background-color: #4caf50; /* Vibrant green thumb for urgent-important */
+/* Category-Based Scrollbars with Enhanced Specificity */
+.container.urgent-important-scrollable::-webkit-scrollbar-thumb,
+.card.urgent-important-scrollable::-webkit-scrollbar-thumb,
+body.urgent-important-scrollable::-webkit-scrollbar-thumb {
+    background-color: #4caf50 !important;
+    border: 2px solid #1a1a1a;
 }
 
-.not-urgent-important-scrollable::-webkit-scrollbar-thumb {
-    background-color: #03a9f4; /* Vibrant blue thumb for not-urgent-important */
+.container.not-urgent-important-scrollable::-webkit-scrollbar-thumb,
+.card.not-urgent-important-scrollable::-webkit-scrollbar-thumb,
+body.not-urgent-important-scrollable::-webkit-scrollbar-thumb {
+    background-color: #03a9f4 !important;
+    border: 2px solid #1a1a1a;
 }
 
-.urgent-not-important-scrollable::-webkit-scrollbar-thumb {
-    background-color: #ff9800; /* Vibrant orange thumb for urgent-not-important */
+.container.urgent-not-important-scrollable::-webkit-scrollbar-thumb,
+.card.urgent-not-important-scrollable::-webkit-scrollbar-thumb,
+body.urgent-not-important-scrollable::-webkit-scrollbar-thumb {
+    background-color: #ff9800 !important;
+    border: 2px solid #1a1a1a;
 }
 
-.not-urgent-not-important-scrollable::-webkit-scrollbar-thumb {
-    background-color: #f44336; /* Vibrant red thumb for not-urgent-not-important */
+.container.not-urgent-not-important-scrollable::-webkit-scrollbar-thumb,
+.card.not-urgent-not-important-scrollable::-webkit-scrollbar-thumb,
+body.not-urgent-not-important-scrollable::-webkit-scrollbar-thumb {
+    background-color: #f44336 !important;
+    border: 2px solid #1a1a1a;
+}
+
+/* Hover Effects for Category Scrollbars */
+.container.urgent-important-scrollable::-webkit-scrollbar-thumb:hover,
+.card.urgent-important-scrollable::-webkit-scrollbar-thumb:hover,
+body.urgent-important-scrollable::-webkit-scrollbar-thumb:hover {
+    background-color: #66bb6a !important;
+}
+
+.container.not-urgent-important-scrollable::-webkit-scrollbar-thumb:hover,
+.card.not-urgent-important-scrollable::-webkit-scrollbar-thumb:hover,
+body.not-urgent-important-scrollable::-webkit-scrollbar-thumb:hover {
+    background-color: #29b6f6 !important;
+}
+
+.container.urgent-not-important-scrollable::-webkit-scrollbar-thumb:hover,
+.card.urgent-not-important-scrollable::-webkit-scrollbar-thumb:hover,
+body.urgent-not-important-scrollable::-webkit-scrollbar-thumb:hover {
+    background-color: #ffa726 !important;
+}
+
+.container.not-urgent-not-important-scrollable::-webkit-scrollbar-thumb:hover,
+.card.not-urgent-not-important-scrollable::-webkit-scrollbar-thumb:hover,
+body.not-urgent-not-important-scrollable::-webkit-scrollbar-thumb:hover {
+    background-color: #ef5350 !important;
 }
