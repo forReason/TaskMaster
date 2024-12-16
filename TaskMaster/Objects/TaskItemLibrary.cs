@@ -1,4 +1,5 @@
 using System.Collections.Concurrent;
+using System.Diagnostics;
 using Multithreading_Library.DataTransfer;
 
 namespace TaskMaster.Objects;
@@ -84,15 +85,24 @@ public class TaskItemLibrary
 
     public TaskItem GetOrCreate(string originalTitle, 
     string? newTitle = null, string? newDescription = null, bool? isUrgent = null, bool? isImportant = null, string[]? newTags = null)
-{
-    TaskItem original = GetOrCreate(originalTitle);
+    {
+        TaskItem original;
+        if (string.IsNullOrEmpty(originalTitle))
+        {
+            if (string.IsNullOrEmpty(newTitle)) throw new ArgumentException("you did not provide a title. The task cannot bve identified");
+            original = GetOrCreate(newTitle);
+        }
+        else
+        {
+            original = GetOrCreate(originalTitle);
+        }
 
     // Remove the task from old collections
-    if (!string.IsNullOrEmpty(newTitle) && newTitle != originalTitle)
+    if (!string.IsNullOrEmpty(newTitle) && !string.IsNullOrEmpty(originalTitle) && newTitle != originalTitle)
     {
-        TaskItem itemToDelete = new TaskItem(originalTitle, this);
-        tasks.TryRemove(itemToDelete, out _);
-        if (itemToDelete.FilePath.Exists) itemToDelete.FilePath.Delete();
+            TaskItem itemToDelete = new TaskItem(originalTitle, this);
+            tasks.TryRemove(itemToDelete, out _);
+            if (itemToDelete.FilePath.Exists) itemToDelete.FilePath.Delete();
     }
 
     if (isUrgent is not null && original.IsUrgent != isUrgent.Value)
@@ -138,7 +148,7 @@ public class TaskItemLibrary
         }
     }
 
-    if (!string.IsNullOrEmpty(newTitle) &&newTitle != originalTitle)
+    if (!string.IsNullOrEmpty(newTitle) && !string.IsNullOrEmpty(originalTitle) &&newTitle != originalTitle)
     {
         TaskItem itemToDelete = new TaskItem(originalTitle, this);
         tasks.TryRemove(itemToDelete, out _);

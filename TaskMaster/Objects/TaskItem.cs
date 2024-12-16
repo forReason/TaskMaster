@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using System.Text.Json;
@@ -16,7 +15,7 @@ namespace TaskMaster.Objects
             _title = name;
             _hashCode = ComputeHash(_title);
             ParentLibrary = parentLibrary;
-            FilePath = new FileInfo(Path.Combine(ParentLibrary.Directory.FullName, BuildTagName(Title) + ".task"));
+            FilePath = new FileInfo(Path.Combine(ParentLibrary.Directory.FullName, BuildTagName(_title) + ".task"));
         }
         private int _hashCode;
         private string _title = "untitled Task...";
