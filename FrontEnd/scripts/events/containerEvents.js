@@ -1,4 +1,4 @@
-import {updateTaskPriority, updateTaskText, saveTask} from '../services/taskService.js';
+import {updateTaskPriority, updateTaskText, saveTask, markTaskSuccess} from '../services/taskService.js';
 import {createTaskCard} from "../utils/taskUtils.js";
 
 
@@ -18,7 +18,7 @@ export function setupContainers(containers) {
             e.preventDefault();
             container.classList.remove('drag-over');
 
-            const taskId = e.dataTransfer.getData('text/plain');
+            var taskId = e.dataTransfer.getData('text/plain');
             var draggedCard = document.getElementById(taskId);
 
             const isUrgent = container.dataset.urgent === 'true';
@@ -34,6 +34,7 @@ export function setupContainers(containers) {
                     const newTaskCard = createTaskCard({ title: currentTitle.trim(), description: currentDescription.trim() });
                     const success = await saveTask(newTaskCard.id, currentTitle.trim(), currentDescription.trim());
                     taskTitle = currentTitle.trim();
+                    taskId = newTaskCard.id;
                     draggedCard.remove();
                     draggedCard = newTaskCard;
                     const plusButton = document.getElementById('plusButton');
@@ -43,6 +44,7 @@ export function setupContainers(containers) {
                 console.log('Appending card:', draggedCard.id, 'to container:', container.id);
                 console.log('Dragged Card:', draggedCard, 'Parent Node:', draggedCard.parentNode);
                 container.appendChild(draggedCard);
+                await markTaskSuccess(taskId);
                 console.log('Card successfully appended.');
             } catch (error) {
                 console.error('Error updating task:', error);

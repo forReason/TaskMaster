@@ -32,14 +32,35 @@ export async function saveTask(taskId, newTitle, newDescription) {
             return false;
         }
 
-        const taskCard = document.getElementById(taskId);
-        if (taskCard) {
-            taskCard.classList.add('flash-success');
-            setTimeout(() => taskCard.classList.remove('flash-success'), 1000); // Remove class after 1 second
-        }
+        const result = await markTaskSuccess(taskId);
+
         return true;
     } catch (error) {
         alert('An error occurred while saving.');
+        console.error(error);
+        alert(error.message);
+        return false;
+    }
+}
+export async function markTaskSuccess(taskId) {
+    try {
+
+        const taskCard = document.getElementById(taskId);
+        if (taskCard) {
+            console.log('Adding flash-success class to:', taskCard);
+            taskCard.classList.add('flash-success');
+            setTimeout(() => {
+                console.log('Removing flash-success class from:', taskCard);
+                taskCard.classList.remove('flash-success');
+            }, 5000); // Remove class after 1 second
+        }
+        else{
+            console.log('no task was found:', taskId);
+        }
+
+        return true;
+    } catch (error) {
+        alert('An error occurred while flashing a task green.');
         console.error(error);
         alert(error.message);
         return false;

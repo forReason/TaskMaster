@@ -88,6 +88,7 @@ body {
 }
 .flash-success {
     background-color: #d4edda; /* Light green */
-    transition: background-color 1s ease;
+    transition: background-color 1s ease; /* Smooth transition */
 }
+
 
