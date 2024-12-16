@@ -52,7 +52,7 @@ export async function markTaskSuccess(taskId) {
             setTimeout(() => {
                 console.log('Removing flash-success class from:', taskCard);
                 taskCard.classList.remove('flash-success');
-            }, 3000); // Remove class after 1 second
+            }, 1500); // Remove class after 1 second
         }
         else{
             console.log('no task was found:', taskId);

@@ -1,4 +1,4 @@
-import {updateTaskText, saveTask} from "../services/taskService.js";
+import {updateTaskText, saveTask, markTaskSuccess, deleteTask} from "../services/taskService.js";
 
 export function createTaskCard(task) {
     const card = document.createElement('div');
@@ -67,12 +67,13 @@ export function createTaskCard(task) {
         const newTitle = titleEl.textContent.trim();
         const newDescription = descriptionEl.textContent.trim();
 
-        const success = await saveTask(task.id, newTitle, newDescription);
+        const success = await saveTask(task.title, newTitle, newDescription);
         if (success) {
             task.title = newTitle;
             task.description = newDescription;
             isEditing = false;
-            editBtn.click(); // Exit edit mode
+            editBtn.click();
+            await markTaskSuccess(task.id);
         }
     });
 
