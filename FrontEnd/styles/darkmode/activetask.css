@@ -1,0 +1,128 @@
+/* Priority-Specific Active Task Styling with Particles */
+#urgent-important .card.active-task {
+    border: 2px solid #4caf50; /* Vibrant green border */
+    background-color: rgba(76, 175, 80, 0.2); /* Highlighted green background */
+    color: #ffffff;
+    box-shadow: 0 0 12px rgba(76, 175, 80, 0.5); /* Subtle green glow */
+}
+
+#not-urgent-important .card.active-task {
+    border: 2px solid #03a9f4; /* Vibrant blue border */
+    background-color: rgba(3, 169, 244, 0.2); /* Highlighted blue background */
+    color: #ffffff;
+    box-shadow: 0 0 12px rgba(3, 169, 244, 0.5); /* Subtle blue glow */
+}
+
+#urgent-not-important .card.active-task {
+    border: 2px solid #ff9800; /* Vibrant orange border */
+    background-color: rgba(255, 152, 0, 0.2); /* Highlighted orange background */
+    color: #ffffff;
+    box-shadow: 0 0 12px rgba(255, 152, 0, 0.5); /* Subtle orange glow */
+}
+
+#not-urgent-not-important .card.active-task {
+    border: 2px solid #f44336; /* Vibrant red border */
+    background-color: rgba(244, 67, 54, 0.2); /* Highlighted red background */
+    color: #ffffff;
+    box-shadow: 0 0 12px rgba(244, 67, 54, 0.5); /* Subtle red glow */
+}
+
+/* Sparkle Colors Based on Category */
+#urgent-important .shine,
+#urgent-important .sparkle {
+    background: radial-gradient(circle, #4caf50, rgba(76, 175, 80, 0));
+}
+
+#not-urgent-important .shine,
+#not-urgent-important .sparkle {
+    background: radial-gradient(circle, #03a9f4, rgba(3, 169, 244, 0));
+}
+
+#urgent-not-important .shine,
+#urgent-not-important .sparkle {
+    background: radial-gradient(circle, #ff9800, rgba(255, 152, 0, 0));
+}
+
+#not-urgent-not-important .shine,
+#not-urgent-not-important .sparkle {
+    background: radial-gradient(circle, #f44336, rgba(244, 67, 54, 0));
+}
+
+
+/* Category-Specific Animations */
+@keyframes pulse-urgent-important {
+    0% {
+        transform: scale(0.99);
+        box-shadow: 0 0 5px rgba(76, 175, 80, 0.5); /* Green glow */
+    }
+    50% {
+        transform: scale(0.97);
+        box-shadow: 0 0 15px rgba(76, 175, 80, 0.7); /* Green glow */
+    }
+    100% {
+        transform: scale(0.99);
+        box-shadow: 0 0 5px rgba(76, 175, 80, 0.5); /* Green glow */
+    }
+}
+
+@keyframes pulse-not-urgent-important {
+    0% {
+        transform: scale(0.99);
+        box-shadow: 0 0 5px rgba(3, 169, 244, 0.5); /* Blue glow */
+    }
+    50% {
+        transform: scale(0.97);
+        box-shadow: 0 0 15px rgba(3, 169, 244, 0.7); /* Blue glow */
+    }
+    100% {
+        transform: scale(0.99);
+        box-shadow: 0 0 5px rgba(3, 169, 244, 0.5); /* Blue glow */
+    }
+}
+
+@keyframes pulse-urgent-not-important {
+    0% {
+        transform: scale(0.99);
+        box-shadow: 0 0 5px rgba(255, 152, 0, 0.5); /* Orange glow */
+    }
+    50% {
+        transform: scale(0.97);
+        box-shadow: 0 0 15px rgba(255, 152, 0, 0.7); /* Orange glow */
+    }
+    100% {
+        transform: scale(0.99);
+        box-shadow: 0 0 5px rgba(255, 152, 0, 0.5); /* Orange glow */
+    }
+}
+
+@keyframes pulse-not-urgent-not-important {
+    0% {
+        transform: scale(0.99);
+        box-shadow: 0 0 5px rgba(244, 67, 54, 0.5); /* Red glow */
+    }
+    50% {
+        transform: scale(0.97);
+        box-shadow: 0 0 15px rgba(244, 67, 54, 0.7); /* Red glow */
+    }
+    100% {
+        transform: scale(0.99);
+        box-shadow: 0 0 5px rgba(244, 67, 54, 0.5); /* Red glow */
+    }
+}
+
+/* Apply Category-Specific Animations */
+#urgent-important .card.active-task {
+    animation: pulse-urgent-important 5s infinite;
+}
+
+#not-urgent-important .card.active-task {
+    animation: pulse-not-urgent-important 5s infinite;
+}
+
+#urgent-not-important .card.active-task {
+    animation: pulse-urgent-not-important 5s infinite;
+}
+
+#not-urgent-not-important .card.active-task {
+    animation: pulse-not-urgent-not-important 5s infinite;
+}

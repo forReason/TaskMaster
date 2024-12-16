@@ -1,0 +1,78 @@
+/* Darkened Subtle Background Colors for Task Priority in Dark Mode */
+#urgent-important {
+    background-color: rgba(30, 60, 30, 0.2);
+    border: 1px solid rgba(30, 60, 30, 0.5);
+    border-left: 2px solid rgba(30, 60, 30, 0.5); /* Accent border for clarity */
+    border-radius: 0.2cm;
+}
+
+#not-urgent-important {
+    background-color: rgba(20, 50, 60, 0.2);
+    border: 1px solid rgba(20, 50, 60, 0.5);
+    border-left: 2px solid rgba(20, 50, 60, 0.5); /* Accent border for clarity */
+    border-radius: 0.2cm;
+}
+
+#urgent-not-important {
+    background-color: rgba(60, 40, 20, 0.2);
+    border: 1px solid rgba(60, 40, 20, 0.5);
+    border-left: 2px solid rgba(60, 40, 20, 0.5); /* Accent border for clarity */
+    border-radius: 0.2cm;
+}
+
+#not-urgent-not-important {
+    background-color: rgba(60, 20, 20, 0.2);
+    border: 1px solid rgba(60, 20, 20, 0.5);
+    border-left: 2px solid rgba(60, 20, 20, 0.5); /* Accent border for clarity */
+    border-radius: 0.2cm;
+}
+
+
+/* Updated Container Header Styles for Dark Mode */
+.container h2 {
+    background-color: #1a1a1a; /* Darker background to blend with container */
+    color: #c0c0c0; /* Softer gray for text */
+    border-bottom: 1px solid #333; /* Subtle separator for structure */
+    border-radius: 0.1cm;
+    padding: 0.5cm; /* Maintain spacing */
+    position: sticky; /* Stick to top while scrolling */
+    top: 0; /* Ensure visibility at the top */
+    z-index: 1; /* Keep above other content */
+    transition: background-color 0.3s ease, color 0.3s ease; /* Smooth transitions */
+}
+/* Container Header Styles for Each Priority in Dark Mode */
+#urgent-important h2 {
+    background-color: rgba(30, 60, 30, 1); /* Darkened green */
+    color: #b8d8b8; /* Softer greenish text for visibility */
+    border-bottom: 1px solid rgba(30, 60, 30, 0.7); /* Matching accent border */
+}
+
+#not-urgent-important h2 {
+    background-color: rgba(20, 50, 60, 1); /* Darkened blue-green */
+    color: #aed4d9; /* Softer bluish text for visibility */
+    border-bottom: 1px solid rgba(20, 50, 60, 0.7); /* Matching accent border */
+}
+
+#urgent-not-important h2 {
+    background-color: rgba(60, 40, 20, 1); /* Darkened orange */
+    color: #e6c4a8; /* Softer orangish text for visibility */
+    border-bottom: 1px solid rgba(60, 40, 20, 0.7); /* Matching accent border */
+}
+
+#not-urgent-not-important h2 {
+    background-color: rgba(60, 20, 20, 1); /* Darkened red */
+    color: #e6aaaa; /* Softer reddish text for visibility */
+    border-bottom: 1px solid rgba(60, 20, 20, 0.7); /* Matching accent border */
+}
+
+
+
+.container h2:hover {
+    background-color: #222; /* Slightly lighter on hover for clarity */
+    color: #ffffff; /* Brighter text on hover */
+}
+
+
+.container.drag-over {
+    border-color: #66b2ff;
+}

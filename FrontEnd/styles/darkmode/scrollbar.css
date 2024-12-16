@@ -1,0 +1,47 @@
+/* General Scrollbar Styling */
+body::-webkit-scrollbar,
+.container::-webkit-scrollbar,
+.card::-webkit-scrollbar {
+    width: 8px; /* Set the width of the scrollbar */
+    height: 8px; /* Set the height of the scrollbar for horizontal scrolling */
+}
+
+body::-webkit-scrollbar-track,
+.container::-webkit-scrollbar-track,
+.card::-webkit-scrollbar-track {
+    background: #1a1a1a; /* Dark background for the track */
+    border-radius: 4px; /* Optional: Round the track corners */
+}
+
+/* Default Thumb Styling */
+body::-webkit-scrollbar-thumb,
+.container::-webkit-scrollbar-thumb,
+.card::-webkit-scrollbar-thumb {
+    background-color: #555; /* Default thumb color */
+    border-radius: 4px; /* Round thumb corners */
+    border: 2px solid #1a1a1a; /* Match track padding */
+}
+
+/* Hover Effects for Thumbs */
+body::-webkit-scrollbar-thumb:hover,
+.container::-webkit-scrollbar-thumb:hover,
+.card::-webkit-scrollbar-thumb:hover {
+    background-color: #777; /* Lighter color on hover */
+}
+
+/* Category-Based Scrollbars with Class Rules */
+.urgent-important-scrollable::-webkit-scrollbar-thumb {
+    background-color: #4caf50; /* Vibrant green thumb for urgent-important */
+}
+
+.not-urgent-important-scrollable::-webkit-scrollbar-thumb {
+    background-color: #03a9f4; /* Vibrant blue thumb for not-urgent-important */
+}
+
+.urgent-not-important-scrollable::-webkit-scrollbar-thumb {
+    background-color: #ff9800; /* Vibrant orange thumb for urgent-not-important */
+}
+
+.not-urgent-not-important-scrollable::-webkit-scrollbar-thumb {
+    background-color: #f44336; /* Vibrant red thumb for not-urgent-not-important */
+}

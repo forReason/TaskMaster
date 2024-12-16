@@ -1,0 +1,52 @@
+.plus-button {
+    background-color: #125a9e; /* Darkened and desaturated blue */
+    color: #cccccc; /* Softer text color for reduced contrast */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); /* Subtler shadow for a more understated look */
+    transition: background-color 0.3s ease, box-shadow 0.3s ease; /* Smooth transition for hover effects */
+}
+
+.plus-button:hover {
+    background-color: #0d4476; /* Slightly darker on hover */
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.4); /* Slightly enhanced shadow on hover */
+}
+
+
+.save-btn {
+    background-color: #2e7d32;
+}
+
+.save-btn:hover {
+    background-color: #1b5e20;
+}
+
+.cancel-btn {
+    background-color: #f9a825;
+}
+
+.cancel-btn:hover {
+    background-color: #c17900;
+}
+
+.delete-btn {
+    background-color: #c62828;
+}
+
+.delete-btn:hover {
+    background-color: #8e0000;
+}
+.set-active-btn {
+    background-color: #1e88e5;
+}
+
+.set-active-btn:hover {
+    background-color: #1565c0;
+}
+
+button {
+    background-color: #333;
+    color: #e0e0e0;
+}
+
+button:hover {
+    background-color: #555;
+}
