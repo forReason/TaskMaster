@@ -52,7 +52,7 @@ export async function markTaskSuccess(taskId) {
             setTimeout(() => {
                 console.log('Removing flash-success class from:', taskCard);
                 taskCard.classList.remove('flash-success');
-            }, 5000); // Remove class after 1 second
+            }, 3000); // Remove class after 1 second
         }
         else{
             console.log('no task was found:', taskId);
@@ -82,5 +82,27 @@ export async function updateTaskText(oldTitle, newTitle, newDescription) {
 
     // Return the response object for further handling
     return response;
+}
+export async function deleteTask(taskName) {
+    try {
+        const response = await fetch(
+            `http://localhost:5169/tasks/${encodeURIComponent(taskName)}`,
+            {
+                method: 'DELETE',
+                headers: { 'accept': '*/*' },
+            }
+        );
+
+        if (!response.ok) {
+            throw new Error(`Failed to delete task: ${response.statusText}`);
+        }
+
+        console.log(`Task "${taskName}" successfully deleted.`);
+        return true;
+    } catch (error) {
+        console.error(`Error deleting task "${taskName}":`, error);
+        alert('Failed to delete the task. Please try again.');
+        return false;
+    }
 }
 
