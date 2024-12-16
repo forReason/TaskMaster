@@ -84,7 +84,7 @@ namespace TaskMaster.Objects
             }
 
             tag = tagBuilder.ToString(); 
-            if (string.IsNullOrEmpty(tag)) throw new NullReferenceException("tag seems to be empty or not parsable!");
+            if (string.IsNullOrEmpty(tag)) throw new NullReferenceException("string could not be normalized!");
             return tag;
         }
 

@@ -221,6 +221,7 @@ export async function highlightActiveTask() {
             if (taskTitle === activeTaskId) {
                 console.log(`Highlighting active task: ${taskTitle}`);
                 card.classList.add('active-task');
+                createSparkles(card); // Add sparkles
             } else {
                 card.classList.remove('active-task');
             }
@@ -229,7 +230,46 @@ export async function highlightActiveTask() {
         console.error('Error highlighting active task:', error);
     }
 }
+function createSparkles(targetElement, sparkleCount = 50, interval = 1000) {
+    // Clear existing sparkles to prevent overlap
+    targetElement.querySelectorAll('.sparkle').forEach(sparkle => sparkle.remove());
 
+    const rect = targetElement.getBoundingClientRect(); // Get the target's size and position
+
+    function generateSparkles() {
+        for (let i = 0; i < sparkleCount; i++) {
+            const sparkle = document.createElement('div');
+            sparkle.classList.add('sparkle');
+
+            // Randomize size and position
+            const size = Math.random() * 3 + 1; // Random size between 2px and 7px
+            const left = Math.random() * (rect.width - size); // Avoid exceeding width
+            const top = Math.random() * (rect.height - size); // Avoid exceeding height
+
+
+            sparkle.style.width = `${size}px`;
+            sparkle.style.height = `${size}px`;
+            sparkle.style.left = `${left}px`;
+            sparkle.style.top = `${top}px`;
+            sparkle.style.animationDelay = `${Math.random()}s`; // Random delay for staggered effect
+
+            // Append sparkle to the target element
+            targetElement.appendChild(sparkle);
+
+            // Automatically remove the sparkle after animation
+            sparkle.addEventListener('animationend', () => sparkle.remove());
+        }
+    }
+
+    // Generate sparkles initially
+    generateSparkles();
+
+    // Regenerate sparkles at the defined interval
+    const sparkleInterval = setInterval(generateSparkles, interval);
+
+    // Return a cleanup function to stop the interval
+    return () => clearInterval(sparkleInterval);
+}
 
 export function getContainerId(task) {
     return task.isUrgent && task.isImportant
