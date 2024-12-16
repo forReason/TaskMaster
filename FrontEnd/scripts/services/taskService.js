@@ -1,5 +1,5 @@
 export async function fetchTasks() {
-    const response = await fetch('http://localhost:5169/tasks');
+    const response = await fetch('http://drg-taskmaster:5000/tasks');
     if (!response.ok) {
         throw new Error(`Failed to fetch tasks: ${response.statusText}`);
     }
@@ -8,7 +8,7 @@ export async function fetchTasks() {
 
 export async function updateTaskPriority(title, isUrgent, isImportant) {
     const response = await fetch(
-        `http://localhost:5169/tasks?title=${encodeURIComponent(title)}&isUrgent=${isUrgent}&isImportant=${isImportant}`,
+        `http://drg-taskmaster:5000/tasks?title=${encodeURIComponent(title)}&isUrgent=${isUrgent}&isImportant=${isImportant}`,
         {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -22,7 +22,7 @@ export async function updateTaskPriority(title, isUrgent, isImportant) {
 
 export async function updateTaskText(oldTitle, newTitle, newDescription) {
     const response = await fetch(
-        `http://localhost:5169/tasks?title=${encodeURIComponent(oldTitle)}&newTitle=${encodeURIComponent(newTitle)}&description=${encodeURIComponent(newDescription)}`,
+        `http://drg-taskmaster:5000/tasks?title=${encodeURIComponent(oldTitle)}&newTitle=${encodeURIComponent(newTitle)}&description=${encodeURIComponent(newDescription)}`,
         {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -39,7 +39,7 @@ export async function updateTaskText(oldTitle, newTitle, newDescription) {
 export async function deleteTask(taskName) {
     try {
         const response = await fetch(
-            `http://localhost:5169/tasks/${encodeURIComponent(taskName)}`,
+            `http://drg-taskmaster:5000/tasks/${encodeURIComponent(taskName)}`,
             {
                 method: 'DELETE',
                 headers: { 'accept': '*/*' },
@@ -60,7 +60,7 @@ export async function deleteTask(taskName) {
 }
 
 export async function getActiveTask() {
-    const response = await fetch('http://localhost:5169/tasks/active');
+    const response = await fetch('http://drg-taskmaster:5000/tasks/active');
     if (!response.ok) {
         throw new Error(`Failed to fetch active task: ${response.statusText}`);
     }
@@ -78,7 +78,7 @@ export async function getActiveTask() {
 // Set the active task
 export async function setActiveTask(taskId) {
     try {
-        const response = await fetch(`http://localhost:5169/tasks/active?taskId=${encodeURIComponent(taskId)}`, {
+        const response = await fetch(`http://drg-taskmaster:5000/tasks/active?taskId=${encodeURIComponent(taskId)}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
         });

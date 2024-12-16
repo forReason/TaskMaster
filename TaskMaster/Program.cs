@@ -18,12 +18,20 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
+// Set the URL to listen on all interfaces (public)
+app.Urls.Add("http://0.0.0.0:5000");
+
 app.UseCors(); // Enable CORS middleware
 
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+}
+else
+{
+    // Disable Swagger in production
+    Console.WriteLine("Swagger is disabled in production.");
 }
 
 app.UseHttpsRedirection();
