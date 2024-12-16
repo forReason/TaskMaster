@@ -14,8 +14,7 @@ export function createTaskCard(task) {
     titleEl.contentEditable = false;
 
     // Prevent dragging on title field
-    titleEl.addEventListener('mousedown', (e) => e.stopPropagation());
-    titleEl.addEventListener('dragstart', (e) => e.preventDefault());
+    titleEl.addEventListener('dragstart', (e) => e.stopPropagation());
 
     // Description element
     const descriptionEl = document.createElement('div');
@@ -24,8 +23,7 @@ export function createTaskCard(task) {
     descriptionEl.contentEditable = false;
 
     // Prevent dragging on description field
-    descriptionEl.addEventListener('mousedown', (e) => e.stopPropagation());
-    descriptionEl.addEventListener('dragstart', (e) => e.preventDefault());
+    descriptionEl.addEventListener('dragstart', (e) => e.stopPropagation());
 
     // Edit button
     const editBtn = document.createElement('button');
@@ -63,8 +61,7 @@ export function createTaskCard(task) {
     setActiveBtn.addEventListener('click', async () => {
         try {
             const success = await setActiveTask(task.title);
-            if (success) {
-                alert(`Task "${task.title}" is now the active task.`);
+            if (success) {;
                 await highlightActiveTask(); // Update the UI to reflect the active task
             } else {
                 alert(`Failed to set task "${task.title}" as active.`);
@@ -78,8 +75,10 @@ export function createTaskCard(task) {
 
     // Edit button functionality
     let isEditing = false;
+
     editBtn.addEventListener('click', () => {
         isEditing = !isEditing;
+
         titleEl.contentEditable = isEditing;
         descriptionEl.contentEditable = isEditing;
 
@@ -134,13 +133,14 @@ export function createTaskCard(task) {
     // Append elements to the card
     card.append(editBtn, titleEl, descriptionEl, saveBtn, cancelBtn, deleteBtn, setActiveBtn);
 
-    // Drag-and-drop functionality
+    // Drag-and-drop functionality for the card
     card.addEventListener('dragstart', (e) => {
         e.dataTransfer.setData('text/plain', card.id);
     });
 
     return card;
 }
+
 
 export async function saveTask(task, newTitle, newDescription) {
     if (!newTitle) {
