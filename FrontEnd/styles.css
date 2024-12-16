@@ -80,8 +80,14 @@ body {
     cursor: pointer;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     transition: transform 0.3s ease;
+    z-index: 9000;
 }
 
 .plus-button:hover {
     transform: translate(-50%, -50%) scale(1.1);
 }
+.flash-success {
+    background-color: #d4edda; /* Light green */
+    transition: background-color 1s ease;
+}
+

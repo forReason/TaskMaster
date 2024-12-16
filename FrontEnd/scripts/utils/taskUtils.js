@@ -1,4 +1,4 @@
-import {updateTaskText} from "../services/taskService.js";
+import {updateTaskText, saveTask} from "../services/taskService.js";
 
 export function createTaskCard(task) {
     const card = document.createElement('div');
@@ -21,31 +21,19 @@ export function createTaskCard(task) {
     saveBtn.textContent = 'Save';
 
     saveBtn.addEventListener('click', async () => {
+        const cardElement = saveBtn.closest('.task-card');
+        const taskId = cardElement.dataset.id;
+        const titleEl = cardElement.querySelector('.title');
+        const descriptionEl = cardElement.querySelector('.description');
+
         const newTitle = titleEl.textContent.trim();
         const newDescription = descriptionEl.textContent.trim();
 
-        if (!newTitle) {
-            alert('Task title cannot be empty.');
-            return;
+        const success = await saveTask(taskId, newTitle, newDescription);
+
+        if (success) {
+            // Optionally, perform additional UI updates
         }
-
-        try {
-            const response = await updateTaskText(task.title, newTitle, newDescription);
-
-            if (!response.ok) {
-                alert('Failed to save task!');
-                return;
-            }
-
-            alert('Task saved successfully!');
-            card.remove();
-            document.getElementById('plusButton').style.visibility = 'visible';
-        } catch (error) {
-            alert('An error occurred while saving.');
-            console.error(error); // Log full error for debugging
-            alert(error.message);
-        }
-
     });
 
     const cancelBtn = document.createElement('button');

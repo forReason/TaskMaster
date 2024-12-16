@@ -1,4 +1,7 @@
-import {updateTaskPriority} from '../services/taskService.js';
+import {updateTaskPriority, updateTaskText, saveTask} from '../services/taskService.js';
+import {createTaskCard} from "../utils/taskUtils.js";
+
+
 
 export function setupContainers(containers) {
     containers.forEach((container) => {
@@ -16,15 +19,31 @@ export function setupContainers(containers) {
             container.classList.remove('drag-over');
 
             const taskId = e.dataTransfer.getData('text/plain');
-            const draggedCard = document.getElementById(taskId);
+            var draggedCard = document.getElementById(taskId);
 
             const isUrgent = container.dataset.urgent === 'true';
             const isImportant = container.dataset.important === 'true';
-            const taskTitle = draggedCard.dataset.title;
+            var taskTitle = draggedCard.dataset.title;
 
             try {
+                if (taskTitle === ""){
+                    const titleEl = draggedCard.querySelector('.card-title');
+                    const descriptionEl = draggedCard.querySelector('.card-description');
+                    const currentTitle = titleEl.textContent.trim();
+                    const currentDescription = descriptionEl.textContent.trim();
+                    const newTaskCard = createTaskCard({ title: currentTitle.trim(), description: currentDescription.trim() });
+                    const success = await saveTask(newTaskCard.id, currentTitle.trim(), currentDescription.trim());
+                    taskTitle = currentTitle.trim();
+                    draggedCard.remove();
+                    draggedCard = newTaskCard;
+                    const plusButton = document.getElementById('plusButton');
+                    plusButton.style.visibility = 'visible';
+                }
                 await updateTaskPriority(taskTitle, isUrgent, isImportant);
+                console.log('Appending card:', draggedCard.id, 'to container:', container.id);
+                console.log('Dragged Card:', draggedCard, 'Parent Node:', draggedCard.parentNode);
                 container.appendChild(draggedCard);
+                console.log('Card successfully appended.');
             } catch (error) {
                 console.error('Error updating task:', error);
                 alert('Failed to move task!');

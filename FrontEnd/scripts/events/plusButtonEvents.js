@@ -13,7 +13,7 @@ export function setupPlusButton() {
         emptyTaskCard.style.padding = '1rem';
         emptyTaskCard.style.backgroundColor = 'white';
         emptyTaskCard.style.width = '300px';
-        emptyTaskCard.style.zIndex = '1000';
+        emptyTaskCard.style.zIndex = '10000';
 
         document.body.appendChild(emptyTaskCard);
         plusButton.style.visibility = 'hidden';
