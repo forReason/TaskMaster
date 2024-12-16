@@ -1,11 +1,11 @@
 .card {
     position: relative; /* Allow sparkles to position themselves relative to the card */
     display: block; /* Remove flex behavior affecting sparkles */
-    padding: 0.2cm;
-    border: 0.05cm solid #ccc;
-    border-radius: 0.25cm;
+    padding: 0.15cm; /* Reduced padding */
+    border: 0.04cm solid #ccc; /* Slightly thinner border */
+    border-radius: 0.2cm; /* Adjusted for a more compact look */
     background-color: #fff;
-    margin-bottom: 0.3cm;
+    margin-bottom: 0.2cm; /* Reduced margin between cards */
 }
 
 /* Title and Edit Button Row */
@@ -13,30 +13,30 @@
     display: flex;
     justify-content: space-between; /* Align title to the left and button to the right */
     align-items: center; /* Vertically align the elements */
-    margin-bottom: 0.2cm; /* Space below the header */
+    margin-bottom: 0.1cm; /* Reduced space below the header */
 }
 
 /* Title Styling */
 .card-title {
-    font-size: 0.5cm;
+    font-size: 0.45cm; /* Slightly smaller font size */
     font-weight: bold;
     margin: 0; /* Remove unnecessary margin */
 }
 
 /* Description Styling */
 .card-description {
-    font-size: 0.45cm;
+    font-size: 0.4cm; /* Slightly smaller font size */
     color: #555;
-    margin-bottom: 0.1cm; /* Space below description */
+    margin-bottom: 0.1cm; /* Reduced space below description */
 }
 
 /* Edit Button Styling */
 .edit-btn {
     background-color: #007bff;
     color: white;
-    font-size: 0.7cm;
-    width: 1cm;
-    height: 1cm;
+    font-size: 0.6cm; /* Reduced font size */
+    width: 0.8cm; /* Smaller button dimensions */
+    height: 0.8cm;
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -53,16 +53,16 @@
 .action-button-row {
     display: flex;
     justify-content: space-evenly; /* Evenly distribute buttons */
-    gap: 0.5cm; /* Space between buttons */
-    margin-top: 0.5cm; /* Space above the button row */
+    gap: 0.4cm; /* Reduced space between buttons */
+    margin-top: 0.3cm; /* Reduced space above the button row */
 }
 
 /* General Button Styling */
 button {
     border: none;
-    padding: 0.3cm 0.6cm;
-    font-size: 0.4cm;
-    border-radius: 0.25cm;
+    padding: 0.2cm 0.4cm; /* Reduced padding */
+    font-size: 0.35cm; /* Slightly smaller font size */
+    border-radius: 0.2cm; /* Compact border radius */
     cursor: pointer;
     transition: background-color 0.3s ease;
 }
@@ -98,13 +98,14 @@ button {
 .set-active-btn {
     background-color: #007bff;
     color: white;
-    padding: 0.3cm;
+    padding: 0.2cm; /* Reduced padding for a smaller look */
 }
 
 .set-active-btn:hover {
     background-color: #0056b3;
 }
 
+/* Sparkle Styling */
 .sparkle {
     position: absolute;
     background: radial-gradient(circle, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0));
@@ -120,7 +121,7 @@ button {
         opacity: 1;
     }
     50% {
-        transform: scale(2);
+        transform: scale(1.5);
         opacity: 0.5;
     }
     100% {
@@ -128,4 +129,3 @@ button {
         opacity: 0;
     }
 }
-
