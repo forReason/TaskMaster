@@ -157,22 +157,25 @@ export async function saveTask(task, newTitle, newDescription) {
             return false;
         }
         const taskCard = document.getElementById(`task-${task.title}`);
-        task.title = newTitle.trim();
-        task.description = newDescription.trim();
+        if (taskCard) {
+            task.title = newTitle.trim();
+            task.description = newDescription.trim();
+            taskCard.title = newTitle.trim();
+            taskCard.description = newDescription.trim();
 
+            taskCard.description = newDescription.trim();
+            taskCard.dataset.title = newTitle.trim();
+            taskCard.dataset.description = newDescription.trim();
+            taskCard.id = `task-${taskCard.title || 'new'}`;
+            // Update the displayed content in the card
+            const titleEl = taskCard.querySelector('.card-title');
+            const descriptionEl = taskCard.querySelector('.card-description');
 
-        taskCard.title = newTitle.trim();
-        taskCard.description = newDescription.trim();
-        taskCard.dataset.title = newTitle.trim();
-        taskCard.dataset.description = newDescription.trim();
-        taskCard.id = `task-${taskCard.title || 'new'}`;
-        // Update the displayed content in the card
-        const titleEl = taskCard.querySelector('.card-title');
-        const descriptionEl = taskCard.querySelector('.card-description');
+            if (titleEl) titleEl.textContent = newTitle;
+            if (descriptionEl) descriptionEl.textContent = newDescription;
+            const result = await markTaskSuccess(taskCard.id);
+        }
 
-        if (titleEl) titleEl.textContent = newTitle;
-        if (descriptionEl) descriptionEl.textContent = newDescription;
-        const result = await markTaskSuccess(taskCard.id);
         return true;
     } catch (error) {
         alert('An error occurred while saving.');
