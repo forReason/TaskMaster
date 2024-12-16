@@ -56,6 +56,7 @@ export function createTaskCard(task) {
     setActiveBtn.classList.add('set-active-btn');
     setActiveBtn.textContent = 'Set Active';
     setActiveBtn.title = 'Set this task as the active task';
+    setActiveBtn.style.display = 'none';
 
 
     // Set Active Task button functionality
@@ -72,6 +73,7 @@ export function createTaskCard(task) {
             console.error(`Error setting active task: ${error}`);
             alert('An error occurred while setting the active task.');
         }
+        editBtn.click();
     });
 
     // Edit button functionality
@@ -84,6 +86,7 @@ export function createTaskCard(task) {
         saveBtn.style.display = isEditing ? 'inline-block' : 'none';
         cancelBtn.style.display = isEditing ? 'inline-block' : 'none';
         deleteBtn.style.display = isEditing ? 'inline-block' : 'none';
+        setActiveBtn.style.display = isEditing ? 'inline-block' : 'none';
         editBtn.textContent = isEditing ? 'Exit' : '✎';
 
         if (!isEditing) {
