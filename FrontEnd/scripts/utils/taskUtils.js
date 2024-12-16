@@ -1,4 +1,4 @@
-import {updateTaskText, saveTask, markTaskSuccess, deleteTask} from "../services/taskService.js";
+import {updateTaskText, deleteTask} from "../services/taskService.js";
 
 export function createTaskCard(task) {
     const card = document.createElement('div');
@@ -72,15 +72,12 @@ export function createTaskCard(task) {
 
     // Save button functionality
     saveBtn.addEventListener('click', async () => {
-        const newTitle = titleEl.textContent.trim();
-        const newDescription = descriptionEl.textContent.trim();
+        const newTitle = titleEl.textContent;
+        const newDescription = descriptionEl.textContent;
 
-        const success = await saveTask(task.title, newTitle, newDescription);
+        const success = await saveTask(task, newTitle, newDescription);
         if (success) {
-            task.title = newTitle;
-            task.description = newDescription;
             editBtn.click();
-            await markTaskSuccess(task.id);
         }
     });
 
@@ -120,7 +117,70 @@ export function createTaskCard(task) {
     return card;
 }
 
+export async function saveTask(task, newTitle, newDescription) {
+    if (!newTitle) {
+        alert('Task title cannot be empty.');
+        return false;
+    }
 
+    try {
+
+        const response = await updateTaskText(task.title, newTitle, newDescription);
+
+        if (!response.ok) {
+            alert('Failed to save task!');
+            return false;
+        }
+        const taskCard = document.getElementById(`task-${task.title}`);
+        task.title = newTitle.trim();
+        task.description = newDescription.trim();
+
+
+        taskCard.title = newTitle.trim();
+        taskCard.description = newDescription.trim();
+        taskCard.dataset.title = newTitle.trim();
+        taskCard.dataset.description = newDescription.trim();
+        taskCard.id = `task-${taskCard.title || 'new'}`;
+        // Update the displayed content in the card
+        const titleEl = taskCard.querySelector('.card-title');
+        const descriptionEl = taskCard.querySelector('.card-description');
+
+        if (titleEl) titleEl.textContent = newTitle;
+        if (descriptionEl) descriptionEl.textContent = newDescription;
+        const result = await markTaskSuccess(taskCard.id);
+        return true;
+    } catch (error) {
+        alert('An error occurred while saving.');
+        console.error(error);
+        alert(error.message);
+        return false;
+    }
+}
+
+export async function markTaskSuccess(taskId) {
+    try {
+
+        const taskCard = document.getElementById(taskId);
+        if (taskCard) {
+            console.log('Adding flash-success class to:', taskCard);
+            taskCard.classList.add('flash-success');
+            setTimeout(() => {
+                console.log('Removing flash-success class from:', taskCard);
+                taskCard.classList.remove('flash-success');
+            }, 1500); // Remove class after 1 second
+        }
+        else{
+            console.log('no task was found:', taskId);
+        }
+
+        return true;
+    } catch (error) {
+        alert('An error occurred while flashing a task green.');
+        console.error(error);
+        alert(error.message);
+        return false;
+    }
+}
 
 export function getContainerId(task) {
     return task.isUrgent && task.isImportant

@@ -20,6 +20,7 @@ public class TaskItemLibrary
     public ConcurrentDictionary<string, ConcurrentHashSet<TaskItem>> TasksByTags = new();
     public ConcurrentHashSet<TaskItem> requiringSave = new();
     public ConcurrentHashSet<FileInfo> NameTrashBin = new();
+    public string ActiveTask { get; set; } = "";
 
     /// <summary>
     /// Adds a task to the TasksByTags dictionary in a concurrent-safe manner.
@@ -240,6 +241,12 @@ public class TaskItemLibrary
             task.Save();
             requiringSave.TryRemove(task, out _);
         }
+
+    }
+    internal void SaveActiveTask(string taskId)
+    {
+        ActiveTask = taskId;
+        File.WriteAllText(Path.Combine(Directory.FullName, "activeTask.txt"), taskId);
     }
 
     private void Load()
@@ -252,6 +259,10 @@ public class TaskItemLibrary
         foreach (FileInfo task in tasks)
         {
             GetOrCreate(Path.GetFileNameWithoutExtension(task.Name));
+        }
+        if (File.Exists(Path.Combine(Directory.FullName, "activetask.txt")))
+        {
+            ActiveTask = File.ReadAllText(Path.Combine(Directory.FullName, "activeTask.txt"));
         }
     }
     /// <summary>

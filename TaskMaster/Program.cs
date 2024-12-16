@@ -72,7 +72,33 @@ app.MapPost("/tasks", (string title, string? newTitle, string? description, bool
     }
 }).WithName("CreateTask");
 
+// Get the active task
+app.MapGet("/tasks/active", () =>
+{
+    return Results.Ok(library.ActiveTask);
+}).WithName("GetActiveTask");
 
+// Set the active task
+app.MapPost("/tasks/active", (string taskId) =>
+{
+    try
+    {
+        // Validate that the task exists
+        if (!library.tasks.Any(task => task.Title == taskId))
+        {
+            return Results.NotFound($"Task with ID '{taskId}' not found.");
+        }
+
+        // Update the active task
+        library.SaveActiveTask(taskId);
+        return Results.Ok($"Active task set to '{taskId}'.");
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"Error setting active task: {ex.Message}");
+        return Results.Problem("Failed to set active task.");
+    }
+}).WithName("SetActiveTask");
 
 app.MapDelete("/tasks/{taskName}", (string taskName) =>
 {

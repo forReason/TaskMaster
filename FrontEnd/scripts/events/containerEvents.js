@@ -1,5 +1,5 @@
-import {updateTaskPriority, updateTaskText, saveTask, markTaskSuccess} from '../services/taskService.js';
-import {createTaskCard} from "../utils/taskUtils.js";
+import {updateTaskPriority} from '../services/taskService.js';
+import {createTaskCard, saveTask, markTaskSuccess} from "../utils/taskUtils.js";
 
 
 

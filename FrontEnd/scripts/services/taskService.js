@@ -18,54 +18,8 @@ export async function updateTaskPriority(title, isUrgent, isImportant) {
         throw new Error(`Failed to update task: ${response.statusText}`);
     }
 }
-export async function saveTask(taskId, newTitle, newDescription) {
-    if (!newTitle) {
-        alert('Task title cannot be empty.');
-        return false;
-    }
 
-    try {
-        const response = await updateTaskText(taskId, newTitle, newDescription);
 
-        if (!response.ok) {
-            alert('Failed to save task!');
-            return false;
-        }
-
-        const result = await markTaskSuccess(taskId);
-
-        return true;
-    } catch (error) {
-        alert('An error occurred while saving.');
-        console.error(error);
-        alert(error.message);
-        return false;
-    }
-}
-export async function markTaskSuccess(taskId) {
-    try {
-
-        const taskCard = document.getElementById(taskId);
-        if (taskCard) {
-            console.log('Adding flash-success class to:', taskCard);
-            taskCard.classList.add('flash-success');
-            setTimeout(() => {
-                console.log('Removing flash-success class from:', taskCard);
-                taskCard.classList.remove('flash-success');
-            }, 1500); // Remove class after 1 second
-        }
-        else{
-            console.log('no task was found:', taskId);
-        }
-
-        return true;
-    } catch (error) {
-        alert('An error occurred while flashing a task green.');
-        console.error(error);
-        alert(error.message);
-        return false;
-    }
-}
 export async function updateTaskText(oldTitle, newTitle, newDescription) {
     const response = await fetch(
         `http://localhost:5169/tasks?title=${encodeURIComponent(oldTitle)}&newTitle=${encodeURIComponent(newTitle)}&description=${encodeURIComponent(newDescription)}`,
@@ -79,7 +33,6 @@ export async function updateTaskText(oldTitle, newTitle, newDescription) {
     if (!response.ok) {
         throw new Error(`Failed to update task: ${response.statusText}`);
     }
-
     // Return the response object for further handling
     return response;
 }
