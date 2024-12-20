@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="SshConfigs">
+    <configs>
+      <sshConfig host="drg-taskmaster" id="4d2a3232-3915-4062-9773-f395b064ba74" keyPath="$USER_HOME$/.ssh/id_ed25519" port="22" nameFormat="DESCRIPTIVE" username="drgadmin" useOpenSSHConfig="true" />
+    </configs>
+  </component>
+</project>

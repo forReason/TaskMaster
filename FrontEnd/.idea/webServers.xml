@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="5a8bab6b-3004-4a61-8ae0-74f5af07ebc2" name="drg-taskmaster">
+        <fileTransfer rootFolder="/var/www/" accessType="SFTP" host="drg-taskmaster" port="22" sshConfigId="4d2a3232-3915-4062-9773-f395b064ba74" sshConfig="drgadmin@drg-taskmaster:22 key" keyPair="true">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" keepAliveTimeout="0" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>
