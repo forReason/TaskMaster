@@ -1,5 +1,5 @@
 # Welcome To TaskMaster
-Taskmaster is the simplest possiböe implementation for an eisenhower task matrix. It does not get simpler than that:  
+Taskmaster is the simplest possible implementation for an eisenhower task matrix. It does not get simpler than that:  
 ![image](https://github.com/user-attachments/assets/72b63bef-ae42-4c45-a62c-116f11133e37)
 
 You will create very simplistic task items. 
