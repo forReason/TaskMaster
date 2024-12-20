@@ -38,6 +38,9 @@ when you are done with a task delete it. An archive is still outstanding. Rememb
 ## Note for usage on the phone
 TaskMaster relies heavily on drag and drop actions. On the phone, you need to tap and hold a task item for a couple of seconds, to become drag and droppable.
 
+## Backing up your tasks
+Your tasks are stored as text files on the server, in the server application directory. This is something to work on still, but remember. Its all about simplicity. Get productive. Dont get hung up in details and endless possibilities. Just. Keep. It. Simple, Dumbass.
+
 # Installation
 Requirements:
 - .Net 8.0 needs to be installed
